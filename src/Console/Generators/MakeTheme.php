@@ -197,7 +197,7 @@ class MakeTheme extends Command
     protected function askVendor(): void
     {
         do {
-            $this->theme['vendor'] = mb_strtolower($this->config->get('themes-manager.composer.vendor') ?? $this->ask('Vendor name'));
+            $this->theme['vendor'] = Str::kebab(mb_strtolower($this->config->get('themes-manager.composer.vendor') ?? $this->ask('Vendor name')));
         } while (! strlen($this->theme['vendor']));
     }
 
