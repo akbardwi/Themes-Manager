@@ -90,7 +90,7 @@ class MakeTheme extends Command
         if (Str::contains($this->theme['name'], '\\')) {
             $nameParts = explode('\\', str_replace('\\\\', '\\', $this->theme['name']));
             if (count($nameParts) === 2) {
-                $this->theme['vendor'] = mb_strtolower($nameParts[0]);
+                $this->theme['vendor'] = Str::kebab(mb_strtolower($nameParts[0]));
                 $this->theme['name'] = Str::kebab($nameParts[1]);
             } else {
                 // ask for vendor
@@ -100,7 +100,7 @@ class MakeTheme extends Command
         } else {
             if (Str::contains($this->theme['name'], '/')) {
                 [$vendor, $name] = explode('/', $this->theme['name']);
-                $this->theme['vendor'] = mb_strtolower($vendor);
+                $this->theme['vendor'] = Str::kebab(mb_strtolower($vendor));
                 $this->theme['name'] = Str::kebab($name);
             } else {
                 $this->askVendor();
