@@ -8,6 +8,7 @@ use Akbardwi\ThemesManager\Exceptions\ThemeNotFoundException;
 use Akbardwi\ThemesManager\Traits\HasCache;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class ThemesManager
@@ -219,5 +220,32 @@ class ThemesManager
 
             return $key . '="' . $attributes[$key] . '"';
         }, array_keys($attributes)));
+    }
+
+    /**
+     * Remove a theme.
+     */
+    public function remove($themeName): void
+    {
+        // Theme data
+        $theme = $this->get($themeName);
+
+        // Check that paths exist
+        if (! is_dir($theme->getPath())) {
+            throw new ThemeNotFoundException($themeName);
+        }
+
+        // Check that no other theme uses to the same paths (ie a child theme)
+        foreach ($this->themes as $t) {
+            $parent = $t->getParent();
+            if ($parent && $parent->getName() === $theme->getName()) {
+                throw new \Exception("Theme {$t->getName()} is a child theme of {$theme->getName()}. Please remove it first.");
+            }
+        }
+
+        File::deleteDirectory($theme->getPath());
+
+        // Clear cache
+        $this->clearCache();
     }
 }

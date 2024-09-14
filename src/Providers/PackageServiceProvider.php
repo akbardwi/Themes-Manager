@@ -112,6 +112,7 @@ class PackageServiceProvider extends ServiceProvider
             $this->commands([
                 Commands\ClearCache::class,
                 Commands\ListThemes::class,
+                Commands\RemoveThemes::class,
                 Generators\MakeTheme::class,
             ]);
         }
